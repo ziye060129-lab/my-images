@@ -38,12 +38,8 @@
         #mainImage {
             max-width: 100%;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: opacity 0.2s ease;
             display: block;
-        }
-
-        #mainImage:hover {
-            transform: scale(1.05);
         }
 
         .hero-btn {
@@ -129,12 +125,12 @@
 
                 <button class="hero-btn" onclick="selectHero(this,'fwxu.jpg')">肺雾肾虚男</button>
                 <button class="hero-btn" onclick="selectHero(this,'yingfenshen.png')">神秘影分身</button>
-                <button class="hero-btn" onclick="selectHero(this,'jirounan.jpg')">暴力肌肉男</button>
+                <button class="hero-btn" onclick="selectHero(this,'22.jpg')">暴力肌肉男</button>
                 <button class="hero-btn" onclick="selectHero(this,'duola.png')">朵拉暴露狂</button>
                 <button class="hero-btn" onclick="selectHero(this,'zjh.png')">猥琐张金红</button>
                 <button class="hero-btn" onclick="selectHero(this,'shaxiaozjh.png')">幽默傻笑男</button>
                 <button class="hero-btn" onclick="selectHero(this,'sanjianke.png')">煞笔三剑客</button>
-                <button class="hero-btn" onclick="selectHero(this,'junye.png')">超级扫军爷</button>
+                <button class="hero-btn" onclick="selectHero(this,'11.jpg')">超级扫军爷</button>
                 <button class="hero-btn" onclick="selectHero(this,'saoxjh.png')">难绷徐俊宝</button>
             </div>
 
@@ -149,8 +145,36 @@
 </div>
 
 <script>
+    var imageList = [
+        'haibaozjh.png',
+        'fwxu.jpg',
+        'yingfenshen.png',
+        'jirounan.jpg',
+        'duola.png',
+        'zjh.png',
+        'shaxiaozjh.png',
+        'sanjianke.png',
+        'junye.png',
+        'saoxjh.png'
+    ];
+
+    var imageCache = {};
+
+    imageList.forEach(function(src) {
+        var img = new Image();
+        img.src = src;
+        imageCache[src] = img;
+    });
+
     function selectHero(btn, imgSrc) {
-        document.getElementById('mainImage').src = imgSrc;
+        var mainImage = document.getElementById('mainImage');
+
+        mainImage.style.opacity = 0;
+
+        setTimeout(function () {
+            mainImage.src = imgSrc;
+            mainImage.style.opacity = 1;
+        }, 100);
 
         var buttons = document.getElementsByClassName('hero-btn');
         for (var i = 0; i < buttons.length; i++) {
