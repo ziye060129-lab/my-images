@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>人类群星闪耀</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin:0;
+            padding:0;
+            background:#f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            padding:20px;
+        }
+
+        .container {
+            max-width:800px;
+            margin:auto;
+            background:#fff;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .content {
+            display:flex;
+            gap:30px;
+        }
+
+        .left, .right {
+            flex:1;
+        }
+
+        #mainImage {
+            max-width:100%;
+            cursor:pointer;
+            transition:transform 0.3s;
+        }
+
+        #mainImage:hover {
+            transform:scale(1.05);
+        }
+
+        .hero-btn {
+            border:1px solid #333;
+            padding:8px 16px;
+            margin-right:10px;
+            margin-bottom:12px;
+            cursor:pointer;
+            background:#fff;
+        }
+
+        .hero-btn.active {
+            background:#000;
+            color:#fff;
+        }
+
+        .hero-btn:hover {
+            background:#f0f0f0;
+        }
+
+        /* 手机端 */
+        @media (max-width:768px) {
+            .content {
+                flex-direction:column;
+            }
+
+            .hero-btn {
+                width:100%;
+                margin-right:0;
+            }
+        }
+
+        /* 放大图遮罩 */
+        #bigImageBox {
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.8);
+            text-align:center;
+        }
+
+        #bigImage {
+            margin-top:60px;
+            max-width:90%;
+            max-height:90%;
+        }
+
+        .close {
+            position:absolute;
+            top:20px;
+            right:30px;
+            font-size:30px;
+            color:#fff;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+    <div class="container">
+
+        <div class="content">
+            <!-- 左 -->
+            <div class="left">
+                <img id="mainImage"
+                     src="haibaozjh.png"
+                     onclick="openBigImage()">
+            </div>
+
+            <!-- 右 -->
+            <div class="right">
+                <h1>请选择你的英雄</h1>
+                <p>PS：本页全篇皆为AI请勿当真</p>
+
+                <h3>英雄选择</h3>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'fwxu.jpg')">肺雾肾虚男</button>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'yingfenshen.png')">神秘影分身</button>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'jirounan.jpg')">暴力肌肉男</button>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'duola.png')">朵拉暴露狂</button>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'zjh.png')">猥琐张金红</button>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'shaxiaozjh.png')">幽默傻笑男</button>
+
+                <button class="hero-btn"
+                        onclick="selectHero(this,'sanjianke.png')">煞笔三剑客</button>
+
+                 <button class="hero-btn"
+                        onclick="selectHero(this,'junye.png')">超级扫军爷</button>
+
+                 <button class="hero-btn"
+                        onclick="selectHero(this,'saoxjh.png')">难绷徐俊宝</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 放大图 -->
+<div id="bigImageBox">
+    <span class="close" onclick="closeBigImage()">✕</span>
+    <img id="bigImage">
+</div>
+
+<script>
+    function selectHero(btn, imgSrc) {
+        document.getElementById('mainImage').src = imgSrc;
+
+        var buttons = document.getElementsByClassName('hero-btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('active');
+        }
+
+        btn.classList.add('active');
+    }
+
+    function openBigImage() {
+        document.getElementById('bigImage').src =
+            document.getElementById('mainImage').src;
+        document.getElementById('bigImageBox').style.display = 'block';
+    }
+
+    function closeBigImage() {
+        document.getElementById('bigImageBox').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
