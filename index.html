@@ -38,7 +38,12 @@
         #mainImage {
             max-width:100%;
             cursor:pointer;
-            transition:transform 0.3s;
+            transition:opacity 0.3s ease;  /* 关键：加上过渡动画 */
+            opacity: 0;  /* 默认隐藏图片 */
+        }
+
+        #mainImage.show {
+            opacity: 1;  /* 显示图片 */
         }
 
         #mainImage:hover {
@@ -110,53 +115,34 @@
     <div class="container">
 
         <div class="content">
-            <!-- 左 -->
             <div class="left">
                 <img id="mainImage"
                      src="haibaozjh.png"
+                     class="show"  <!-- 这里加了一个初始显示的类 -->
                      onclick="openBigImage()">
             </div>
 
-            <!-- 右 -->
             <div class="right">
                 <h1>请选择你的英雄</h1>
                 <p>PS：本页全篇皆为AI请勿当真</p>
 
                 <h3>英雄选择</h3>
 
-                <button class="hero-btn"
-                        onclick="selectHero(this,'fwxu.jpg')">肺雾肾虚男</button>
-
-                <button class="hero-btn"
-                        onclick="selectHero(this,'yingfenshen.png')">神秘影分身</button>
-
-                <button class="hero-btn"
-                        onclick="selectHero(this,'jirounan.jpg')">暴力肌肉男</button>
-
-                <button class="hero-btn"
-                        onclick="selectHero(this,'duola.png')">朵拉暴露狂</button>
-
-                <button class="hero-btn"
-                        onclick="selectHero(this,'zjh.png')">猥琐张金红</button>
-
-                <button class="hero-btn"
-                        onclick="selectHero(this,'shaxiaozjh.png')">幽默傻笑男</button>
-
-                <button class="hero-btn"
-                        onclick="selectHero(this,'sanjianke.png')">煞笔三剑客</button>
-
-                 <button class="hero-btn"
-                        onclick="selectHero(this,'junye.png')">超级扫军爷</button>
-
-                 <button class="hero-btn"
-                        onclick="selectHero(this,'saoxjh.png')">难绷徐俊宝</button>
+                <button class="hero-btn" onclick="selectHero(this,'fwxu.jpg')">肺雾肾虚男</button>
+                <button class="hero-btn" onclick="selectHero(this,'yingfenshen.png')">神秘影分身</button>
+                <button class="hero-btn" onclick="selectHero(this,'jirounan.jpg')">暴力肌肉男</button>
+                <button class="hero-btn" onclick="selectHero(this,'duola.png')">朵拉暴露狂</button>
+                <button class="hero-btn" onclick="selectHero(this,'zjh.png')">猥琐张金红</button>
+                <button class="hero-btn" onclick="selectHero(this,'shaxiaozjh.png')">幽默傻笑男</button>
+                <button class="hero-btn" onclick="selectHero(this,'sanjianke.png')">煞笔三剑客</button>
+                <button class="hero-btn" onclick="selectHero(this,'junye.png')">超级扫军爷</button>
+                <button class="hero-btn" onclick="selectHero(this,'saoxjh.png')">难绷徐俊宝</button>
             </div>
         </div>
 
     </div>
 </div>
 
-<!-- 放大图 -->
 <div id="bigImageBox">
     <span class="close" onclick="closeBigImage()">✕</span>
     <img id="bigImage">
@@ -164,13 +150,26 @@
 
 <script>
     function selectHero(btn, imgSrc) {
-        document.getElementById('mainImage').src = imgSrc;
+        var img = document.getElementById('mainImage');
+        
+        // 先设置图片透明度为 0
+        img.style.opacity = 0;
+
+        // 延时后切换图片（保证效果）
+        setTimeout(function () {
+            img.src = imgSrc;
+            img.classList.remove('show');
+            
+            // 延时后重新设置 opacity = 1，并显示图片
+            setTimeout(function () {
+                img.classList.add('show');
+            }, 10);
+        }, 300);
 
         var buttons = document.getElementsByClassName('hero-btn');
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].classList.remove('active');
         }
-
         btn.classList.add('active');
     }
 
@@ -182,6 +181,25 @@
 
     function closeBigImage() {
         document.getElementById('bigImageBox').style.display = 'none';
+    }
+
+    // 🚀 图片预加载（关键加速）
+    var preloadImages = [
+        'haibaozjh.png',
+        'fwxu.jpg',
+        'yingfenshen.png',
+        'jirounan.jpg',
+        'duola.png',
+        'zjh.png',
+        'shaxiaozjh.png',
+        'sanjianke.png',
+        'junye.png',
+        'saoxjh.png'
+    ];
+
+    for (var i = 0; i < preloadImages.length; i++) {
+        var img = new Image();
+        img.src = preloadImages[i];
     }
 </script>
 
