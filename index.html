@@ -3,12 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,
-initial-scale=1,
-maximum-scale=1,
-user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>英雄商城</title>
 
@@ -18,94 +13,73 @@ user-scalable=no">
 margin:0;
 padding:0;
 box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#0e0e11;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
+background:#0f1115;
+font-family:-apple-system,BlinkMacSystemFont;
 }
 
-/* APP容器 */
+/* APP */
 
 .app{
 max-width:520px;
 margin:auto;
 background:#fff;
-min-height:100vh;
-border-radius:32px;
+height:100vh;
+display:flex;
+flex-direction:column;
 overflow:hidden;
-box-shadow:0 40px 80px rgba(0,0,0,.35);
 }
 
 /* 顶部 */
 
 .nav{
-position:sticky;
-top:0;
-z-index:10;
-padding:18px;
+padding:16px;
 font-weight:900;
 text-align:center;
 backdrop-filter:blur(20px);
-background:rgba(255,255,255,.75);
+background:rgba(255,255,255,.8);
+position:sticky;
+top:0;
+z-index:9;
 }
 
-/* ===== 顶级轮播 ===== */
+/* 可滚动区 */
 
-.slider-wrap{
-overflow:hidden;
-position:relative;
+.main{
+flex:1;
+overflow-y:auto;
+padding-bottom:120px;
 }
+
+/* ⭐ 轮播 */
 
 .slider{
 display:flex;
-transition:transform .45s cubic-bezier(.22,.9,.34,1);
-will-change:transform;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
+scroll-behavior:smooth;
 }
 
 .slide{
 min-width:100%;
 aspect-ratio:1/1;
 overflow:hidden;
+scroll-snap-align:center;
 }
 
 .slide img{
 width:100%;
 height:100%;
 object-fit:cover;
-pointer-events:none;
-user-select:none;
+transform:translateZ(0);
 }
 
-/* 小圆点 */
-
-.dots{
-position:absolute;
-bottom:12px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-gap:6px;
-}
-
-.dot{
-width:6px;
-height:6px;
-background:#ffffff90;
-border-radius:20px;
-transition:.3s;
-}
-
-.dot.active{
-width:20px;
-background:#fff;
-}
-
-/* 信息区 */
+/* 信息 */
 
 .info{
-padding:22px 18px 110px;
+padding:22px;
 }
 
 .title{
@@ -114,37 +88,29 @@ font-weight:900;
 }
 
 .price-now{
-font-size:30px;
+color:#e60023;
+font-size:32px;
 font-weight:900;
-color:#ff0036;
-}
-
-.price-old{
-text-decoration:line-through;
-color:#999;
-margin-left:10px;
 }
 
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:12px;
-margin-top:18px;
+margin-top:20px;
 }
 
 .btn{
-border:none;
-padding:15px;
+padding:16px;
 border-radius:14px;
-background:#f2f3f5;
-font-weight:700;
-transition:.25s;
+border:none;
+background:#f3f4f6;
+font-weight:800;
 }
 
 .btn.active{
 background:#111;
 color:#fff;
-transform:scale(1.06);
 }
 
 /* 底部 */
@@ -152,34 +118,84 @@ transform:scale(1.06);
 .bottom{
 position:fixed;
 bottom:0;
-left:50%;
-transform:translateX(-50%);
 width:100%;
 max-width:520px;
 display:flex;
 gap:10px;
 padding:12px;
 background:#fff;
-box-shadow:0 -15px 40px rgba(0,0,0,.18);
+box-shadow:0 -6px 30px rgba(0,0,0,.2);
 }
 
 .cart{
 flex:1;
 border:none;
-padding:16px;
 border-radius:14px;
 background:#eee;
+font-size:18px;
+position:relative;
+}
+
+.badge{
+position:absolute;
+right:8px;
+top:4px;
+background:red;
+color:#fff;
+font-size:12px;
+padding:2px 6px;
+border-radius:20px;
+display:none;
 }
 
 .buy{
 flex:2;
 border:none;
-padding:16px;
 border-radius:14px;
 background:#000;
 color:#fff;
-font-size:18px;
 font-weight:900;
+font-size:18px;
+}
+
+/* SKU弹窗 */
+
+.panel{
+position:fixed;
+left:0;
+bottom:-500px;
+width:100%;
+max-width:520px;
+background:#fff;
+border-radius:24px 24px 0 0;
+padding:24px;
+transition:.4s;
+z-index:99;
+}
+
+.panel.show{
+bottom:0;
+}
+
+.mask{
+position:fixed;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+display:none;
+}
+
+.mask.show{
+display:block;
+}
+
+.fly{
+position:fixed;
+width:80px;
+border-radius:12px;
+pointer-events:none;
+z-index:999;
+transition:1s cubic-bezier(.2,.8,.2,1);
 }
 
 </style>
@@ -193,9 +209,7 @@ font-weight:900;
 🔥 英雄商城
 </div>
 
-<!-- 顶级拖动轮播 -->
-
-<div class="slider-wrap">
+<div class="main">
 
 <div class="slider" id="slider">
 
@@ -210,152 +224,129 @@ font-weight:900;
 
 </div>
 
-<div class="dots" id="dots"></div>
-
-</div>
-
 <div class="info">
 
 <div class="title">请选择你的英雄</div>
-
-<div>
-<span class="price-now">¥69</span>
-<span class="price-old">¥199</span>
-</div>
+<div class="price-now">¥69</div>
 
 <div class="grid">
 
-<button class="btn active" onclick="go(0,this)">肺雾肾虚男</button>
-<button class="btn" onclick="go(1,this)">神秘影分身</button>
-<button class="btn" onclick="go(2,this)">暴力肌肉男</button>
-<button class="btn" onclick="go(3,this)">朵拉暴露狂</button>
-<button class="btn" onclick="go(4,this)">猥琐张金红</button>
-<button class="btn" onclick="go(5,this)">幽默傻笑男</button>
-<button class="btn" onclick="go(6,this)">煞笔三剑客</button>
-<button class="btn" onclick="go(7,this)">超级扫車爷</button>
+<button class="btn active">肺雾肾虚男</button>
+<button class="btn">神秘影分身</button>
+<button class="btn">暴力肌肉男</button>
+<button class="btn">朵拉暴露狂</button>
+<button class="btn">猥琐张金红</button>
+<button class="btn">幽默傻笑男</button>
+<button class="btn">煞笔三剑客</button>
+<button class="btn">超级扫军爷</button>
 
+</div>
 </div>
 </div>
 </div>
 
 <div class="bottom">
-<button class="cart">加入购物车</button>
-<button class="buy">立即购买</button>
+
+<button class="cart" onclick="addCart()">
+🛒
+<span id="badge" class="badge">0</span>
+</button>
+
+<button class="buy" onclick="openPanel()">
+立即购买
+</button>
+
+</div>
+
+<div id="mask" class="mask" onclick="closePanel()"></div>
+
+<div id="panel" class="panel">
+
+<h2>确认购买</h2>
+
+<p style="margin-top:10px;">
+当前英雄已加入订单
+</p>
+
+<button class="buy" style="margin-top:20px;">
+立即支付 ¥69
+</button>
+
 </div>
 
 <script>
 
 const slider=document.getElementById('slider');
-const dots=document.getElementById('dots');
-const total=slider.children.length;
 
-let index=0;
-let startX=0;
-let currentX=0;
-let isDragging=false;
+/* 自动轮播10秒 */
 
-/* 小圆点 */
+setInterval(()=>{
 
-for(let i=0;i<total;i++){
-const d=document.createElement('div');
-d.className='dot'+(i==0?' active':'');
-dots.appendChild(d);
+const w=slider.clientWidth;
+
+slider.scrollBy({left:w,behavior:'smooth'});
+
+if(slider.scrollLeft + w >= slider.scrollWidth){
+slider.scrollTo({left:0});
 }
 
-function updateDots(){
-document.querySelectorAll('.dot')
-.forEach(d=>d.classList.remove('active'));
-dots.children[index].classList.add('active');
+},10000);
+
+
+/* ⭐ 飞入购物车 */
+
+let count=0;
+
+function addCart(){
+
+count++;
+
+badge.style.display='block';
+badge.innerText=count;
+
+const img=document
+.querySelector('.slide img');
+
+const rect=img.getBoundingClientRect();
+
+const fly=img.cloneNode();
+
+fly.className='fly';
+
+fly.style.left=rect.left+'px';
+fly.style.top=rect.top+'px';
+
+document.body.appendChild(fly);
+
+setTimeout(()=>{
+
+fly.style.left='30px';
+fly.style.top=(window.innerHeight-60)+'px';
+fly.style.width='20px';
+fly.style.opacity=.2;
+
+},10);
+
+setTimeout(()=>{
+fly.remove();
+},1000);
+
 }
 
-/* 拖动 */
+/* SKU */
 
-slider.addEventListener('touchstart',e=>{
-isDragging=true;
-startX=e.touches[0].clientX;
-});
-
-slider.addEventListener('touchmove',e=>{
-if(!isDragging)return;
-
-currentX=e.touches[0].clientX-startX;
-
-slider.style.transition='none';
-slider.style.transform=
-`translateX(${ -index*slider.clientWidth + currentX }px)`;
-});
-
-slider.addEventListener('touchend',()=>{
-
-isDragging=false;
-
-if(Math.abs(currentX)>80){
-
-if(currentX<0 && index<total-1) index++;
-if(currentX>0 && index>0) index--;
-
+function openPanel(){
+panel.classList.add('show');
+mask.classList.add('show');
 }
 
-slider.style.transition='.45s cubic-bezier(.22,.9,.34,1)';
-slider.style.transform=
-`translateX(${-index*slider.clientWidth}px)`;
-
-updateDots();
-
-currentX=0;
-
-resetAuto();
-
-});
-
-/* 按钮跳转 */
-
-function go(i,btn){
-
-index=i;
-
-slider.style.transform=
-`translateX(${-index*slider.clientWidth}px)`;
-
-document.querySelectorAll('.btn')
-.forEach(b=>b.classList.remove('active'));
-
-btn.classList.add('active');
-
-updateDots();
-resetAuto();
+function closePanel(){
+panel.classList.remove('show');
+mask.classList.remove('show');
 }
-
-/* ⭐10秒自动轮播 */
-
-let auto=setInterval(next,10000);
-
-function next(){
-
-index = (index+1)%total;
-
-slider.style.transform=
-`translateX(${-index*slider.clientWidth}px)`;
-
-updateDots();
-}
-
-function resetAuto(){
-clearInterval(auto);
-auto=setInterval(next,10000);
-}
-
-/* 预加载 */
-
-[
-'fwxu.jpg','yingfenshen.png',
-'22.jpg','duola.png','zjh.png',
-'shaxiaozjh.png','sanjianke.png','11.jpg'
-].forEach(src=>{
-new Image().src=src;
-});
 
 </script>
 
 </body>
 </html>
+
