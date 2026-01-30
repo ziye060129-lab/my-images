@@ -23,11 +23,16 @@ padding:0;
 box-sizing:border-box;
 }
 
-body{
+/* ⭐⭐⭐ 关键修复：允许页面滚动 ⭐⭐⭐ */
+html,body{
+height:auto;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
 background:#111;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 }
 
+/* APP容器 */
 .app{
 max-width:520px;
 margin:auto;
@@ -35,8 +40,10 @@ background:#fff;
 min-height:100vh;
 border-radius:30px;
 overflow:hidden;
+position:relative;
 }
 
+/* 顶部 */
 .nav{
 position:sticky;
 top:0;
@@ -45,8 +52,15 @@ background:rgba(255,255,255,.7);
 padding:14px;
 text-align:center;
 font-weight:700;
+z-index:2;
 }
 
+/* ⭐ 内容区 — 防止被底部挡住 */
+.content{
+padding-bottom:110px;
+}
+
+/* 轮播 */
 .slider{
 display:flex;
 overflow-x:auto;
@@ -63,11 +77,15 @@ min-width:100%;
 scroll-snap-align:center;
 }
 
+/* ⭐ 强制1:1裁切 */
 .slide img{
 width:100%;
+aspect-ratio:1/1;
+object-fit:cover;
 display:block;
 }
 
+/* 信息 */
 .info{
 padding:20px;
 }
@@ -108,6 +126,7 @@ border-radius:10px;
 font-size:14px;
 }
 
+/* 按钮 */
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -134,9 +153,12 @@ transform:scale(1.05);
 transform:scale(.95);
 }
 
+/* ⭐ 固定底部 */
 .bottom{
 position:fixed;
 bottom:0;
+left:50%;
+transform:translateX(-50%);
 width:100%;
 max-width:520px;
 display:flex;
@@ -182,6 +204,9 @@ border-radius:0;
 🔥 核弹英雄商城
 </div>
 
+<div class="content">
+
+<!-- 轮播 -->
 <div class="slider" id="slider">
 
 <div class="slide"><img src="fwxu.jpg"></div>
@@ -224,7 +249,9 @@ border-radius:0;
 </div>
 </div>
 </div>
+</div>
 
+<!-- 底部 -->
 <div class="bottom">
 <button class="cart">加入购物车</button>
 <button class="buy">立即购买</button>
@@ -234,7 +261,7 @@ border-radius:0;
 
 const slider=document.getElementById('slider');
 
-/* ⭐⭐⭐ 超稳定10秒自动轮播 ⭐⭐⭐ */
+/* ⭐⭐⭐ 10秒自动轮播 ⭐⭐⭐ */
 
 let autoPlay;
 
@@ -255,13 +282,12 @@ slider.scrollTo({left:0});
 
 startAutoPlay();
 
-},10000); // ⭐⭐⭐ 已改为10秒 ⭐⭐⭐
-
+},10000); // ⭐ 已改10秒
 }
 
 startAutoPlay();
 
-/* 用户滑动后重新计时 */
+/* 手动滑动后重新计时 */
 
 slider.addEventListener('touchstart',()=>{
 clearTimeout(autoPlay);
@@ -271,7 +297,7 @@ slider.addEventListener('touchend',()=>{
 startAutoPlay();
 });
 
-/* 秒杀倒计时 */
+/* 倒计时 */
 
 let t=300;
 
@@ -286,7 +312,7 @@ timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
 
 },1000);
 
-/* 点击按钮切换 */
+/* 切换 */
 
 function go(i,btn){
 
@@ -304,7 +330,7 @@ btn.classList.add('active');
 
 }
 
-/* 预加载图片 */
+/* 预加载 */
 
 [
 'fwxu.jpg','yingfenshen.png',
