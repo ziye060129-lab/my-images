@@ -1,198 +1,318 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>人类群星闪耀</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #f5f5f5;
-            font-family: Arial, sans-serif;
-        }
+<meta charset="UTF-8">
 
-        .page {
-            padding: 20px;
-        }
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+user-scalable=no">
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000">
 
-        .content {
-            display: flex;
-            gap: 40px;
-        }
+<title>英雄商城</title>
 
-        .left, .right {
-            flex: 1;
-        }
+<style>
 
-        #mainImage {
-            max-width: 100%;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-            display: block;
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        .hero-btn {
-            border: 1px solid #333;
-            padding: 8px 16px;
-            margin-right: 10px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            background: #fff;
-        }
+body{
+background:#111;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
+}
 
-        .hero-btn.active {
-            background: #000;
-            color: #fff;
-        }
+/* ===== APP容器 ===== */
 
-        .hero-btn:hover {
-            background: #f0f0f0;
-        }
+.app{
+max-width:520px;
+margin:auto;
+background:#fff;
+min-height:100vh;
+border-radius:30px;
+overflow:hidden;
+}
 
-        @media (max-width: 768px) {
-            .content {
-                flex-direction: column;
-            }
+/* ===== 顶部导航 ===== */
 
-            .hero-btn {
-                width: 100%;
-                margin-right: 0;
-            }
-        }
+.nav{
+position:sticky;
+top:0;
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,.7);
+padding:14px;
+text-align:center;
+font-weight:700;
+}
 
-        #bigImageBox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            text-align: center;
-            z-index: 999;
-        }
+/* ===== 自动轮播 ===== */
 
-        #bigImage {
-            margin-top: 60px;
-            max-width: 90%;
-            max-height: 90%;
-        }
+.slider{
+display:flex;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
+scroll-behavior:smooth;
+}
 
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 30px;
-            color: #fff;
-            cursor: pointer;
-        }
-    </style>
+.slider::-webkit-scrollbar{
+display:none;
+}
+
+.slide{
+min-width:100%;
+scroll-snap-align:center;
+}
+
+.slide img{
+width:100%;
+}
+
+/* ===== 信息 ===== */
+
+.info{
+padding:20px;
+}
+
+.title{
+font-size:26px;
+font-weight:800;
+}
+
+.price{
+margin-top:10px;
+}
+
+.now{
+font-size:28px;
+font-weight:900;
+color:#e60023;
+}
+
+.old{
+text-decoration:line-through;
+color:#999;
+margin-left:8px;
+}
+
+/* ⭐评分 */
+
+.star{
+color:#ffaa00;
+margin-top:6px;
+}
+
+/* ===== 倒计时 ===== */
+
+.timer{
+margin-top:10px;
+background:#000;
+color:#fff;
+display:inline-block;
+padding:6px 12px;
+border-radius:10px;
+font-size:14px;
+}
+
+/* ===== Hero按钮 ===== */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+margin-top:20px;
+}
+
+.btn{
+border:none;
+padding:16px;
+border-radius:16px;
+background:#f2f4f7;
+font-weight:600;
+transition:.25s;
+}
+
+.btn.active{
+background:#000;
+color:#fff;
+transform:scale(1.05);
+}
+
+.btn:active{
+transform:scale(.95);
+}
+
+/* ===== 底部 ===== */
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+max-width:520px;
+display:flex;
+gap:10px;
+padding:12px;
+background:#fff;
+box-shadow:0 -8px 30px rgba(0,0,0,.2);
+}
+
+.cart{
+flex:1;
+border:none;
+padding:16px;
+border-radius:14px;
+background:#eee;
+}
+
+.buy{
+flex:2;
+border:none;
+padding:16px;
+border-radius:14px;
+background:#000;
+color:#fff;
+font-size:17px;
+font-weight:800;
+}
+
+/* ===== 手机 ===== */
+
+@media(max-width:768px){
+
+.app{
+border-radius:0;
+}
+
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="page">
-    <div class="container">
-        <div class="content">
+<div class="app">
 
-            <!-- 左侧主图 -->
-            <div class="left">
-                <img
-                    id="mainImage"
-                    src="haibaozjh.png"
-                    onclick="openBigImage()"
-                    alt="主图"
-                >
-            </div>
-
-            <!-- 右侧 -->
-            <div class="right">
-                <h1>请选择你的英雄</h1>
-                <p>PS：本页全篇皆为AI请勿当真</p>
-
-                <h3>英雄选择</h3>
-
-                <button class="hero-btn" onclick="selectHero(this,'fwxu.jpg')">肺雾肾虚男</button>
-                <button class="hero-btn" onclick="selectHero(this,'yingfenshen.png')">神秘影分身</button>
-                <button class="hero-btn" onclick="selectHero(this,'22.jpg')">暴力肌肉男</button>
-                <button class="hero-btn" onclick="selectHero(this,'duola.png')">朵拉暴露狂</button>
-                <button class="hero-btn" onclick="selectHero(this,'zjh.png')">猥琐张金红</button>
-                <button class="hero-btn" onclick="selectHero(this,'shaxiaozjh.png')">幽默傻笑男</button>
-                <button class="hero-btn" onclick="selectHero(this,'sanjianke.png')">煞笔三剑客</button>
-                <button class="hero-btn" onclick="selectHero(this,'11.jpg')">超级扫军爷</button>
-                <button class="hero-btn" onclick="selectHero(this,'saoxjh.png')">难绷徐俊宝</button>
-            </div>
-
-        </div>
-    </div>
+<div class="nav">
+🔥 核弹英雄商城
 </div>
 
-<!-- 放大图 -->
-<div id="bigImageBox">
-    <span class="close" onclick="closeBigImage()">✕</span>
-    <img id="bigImage">
+<!-- ⭐ 自动轮播 -->
+
+<div class="slider" id="slider">
+
+<div class="slide"><img src="haibaozjh.png"></div>
+<div class="slide"><img src="fwxu.jpg"></div>
+<div class="slide"><img src="yingfenshen.png"></div>
+<div class="slide"><img src="22.jpg"></div>
+<div class="slide"><img src="duola.png"></div>
+<div class="slide"><img src="zjh.png"></div>
+<div class="slide"><img src="shaxiaozjh.png"></div>
+<div class="slide"><img src="sanjianke.png"></div>
+<div class="slide"><img src="11.jpg"></div>
+
+</div>
+
+<div class="info">
+
+<div class="title">请选择你的英雄</div>
+
+<div class="price">
+<span class="now">¥69</span>
+<span class="old">¥199</span>
+</div>
+
+<div class="star">⭐⭐⭐⭐⭐ (2.6万评价)</div>
+
+<div class="timer" id="timer">
+限时秒杀 05:00
+</div>
+
+<div class="grid">
+
+<button class="btn active" onclick="go(0,this)">默认海报</button>
+<button class="btn" onclick="go(1,this)">肺雾肾虚男</button>
+<button class="btn" onclick="go(2,this)">神秘影分身</button>
+<button class="btn" onclick="go(3,this)">暴力肌肉男</button>
+<button class="btn" onclick="go(4,this)">朵拉暴露狂</button>
+<button class="btn" onclick="go(5,this)">猥琐张金红</button>
+<button class="btn" onclick="go(6,this)">幽默傻笑男</button>
+<button class="btn" onclick="go(7,this)">煞笔三剑客</button>
+<button class="btn" onclick="go(8,this)">超级扫军爷</button>
+
+</div>
+</div>
+</div>
+
+<div class="bottom">
+<button class="cart">加入购物车</button>
+<button class="buy">立即购买</button>
 </div>
 
 <script>
-    var imageList = [
-        'haibaozjh.png',
-        'fwxu.jpg',
-        'yingfenshen.png',
-        'jirounan.jpg',
-        'duola.png',
-        'zjh.png',
-        'shaxiaozjh.png',
-        'sanjianke.png',
-        'junye.png',
-        'saoxjh.png'
-    ];
 
-    var imageCache = {};
+/* ⭐ 自动轮播 */
 
-    imageList.forEach(function(src) {
-        var img = new Image();
-        img.src = src;
-        imageCache[src] = img;
-    });
+setInterval(()=>{
+slider.scrollBy({
+left:window.innerWidth,
+behavior:'smooth'
+});
 
-    function selectHero(btn, imgSrc) {
-        var mainImage = document.getElementById('mainImage');
+if(slider.scrollLeft + window.innerWidth >= slider.scrollWidth){
+slider.scrollTo({left:0});
+}
 
-        mainImage.style.opacity = 0;
+},3000);
 
-        setTimeout(function () {
-            mainImage.src = imgSrc;
-            mainImage.style.opacity = 1;
-        }, 100);
 
-        var buttons = document.getElementsByClassName('hero-btn');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove('active');
-        }
+/* ⭐ 秒杀倒计时 */
 
-        btn.classList.add('active');
-    }
+let t=300;
 
-    function openBigImage() {
-        document.getElementById('bigImage').src =
-            document.getElementById('mainImage').src;
-        document.getElementById('bigImageBox').style.display = 'block';
-    }
+setInterval(()=>{
 
-    function closeBigImage() {
-        document.getElementById('bigImageBox').style.display = 'none';
-    }
+t--;
+
+let m=Math.floor(t/60);
+let s=t%60;
+
+timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
+
+},1000);
+
+
+/* ⭐ 切换英雄 */
+
+function go(i,btn){
+
+slider.scrollTo({
+left:window.innerWidth*i,
+behavior:'smooth'
+});
+
+document.querySelectorAll('.btn')
+.forEach(b=>b.classList.remove('active'));
+
+btn.classList.add('active');
+
+}
+
+
+/* ⭐ 预加载 */
+
+[
+'haibaozjh.png','fwxu.jpg','yingfenshen.png',
+'22.jpg','duola.png','zjh.png',
+'shaxiaozjh.png','sanjianke.png','11.jpg'
+].forEach(src=>{
+new Image().src=src;
+});
+
 </script>
 
 </body>
