@@ -10,9 +10,6 @@ initial-scale=1,
 maximum-scale=1,
 user-scalable=no">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#000">
-
 <title>英雄商城</title>
 
 <style>
@@ -21,139 +18,137 @@ user-scalable=no">
 margin:0;
 padding:0;
 box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
-/* ⭐⭐⭐ 关键修复：允许页面滚动 ⭐⭐⭐ */
-html,body{
-height:auto;
-overflow-y:auto;
--webkit-overflow-scrolling:touch;
-background:#111;
+body{
+background:#0e0e11;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 }
 
 /* APP容器 */
+
 .app{
 max-width:520px;
 margin:auto;
 background:#fff;
 min-height:100vh;
-border-radius:30px;
+border-radius:32px;
+overflow:hidden;
+box-shadow:0 40px 80px rgba(0,0,0,.35);
+}
+
+/* 顶部 */
+
+.nav{
+position:sticky;
+top:0;
+z-index:10;
+padding:18px;
+font-weight:900;
+text-align:center;
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,.75);
+}
+
+/* ===== 顶级轮播 ===== */
+
+.slider-wrap{
 overflow:hidden;
 position:relative;
 }
 
-/* 顶部 */
-.nav{
-position:sticky;
-top:0;
-backdrop-filter:blur(20px);
-background:rgba(255,255,255,.7);
-padding:14px;
-text-align:center;
-font-weight:700;
-z-index:2;
-}
-
-/* ⭐ 内容区 — 防止被底部挡住 */
-.content{
-padding-bottom:110px;
-}
-
-/* 轮播 */
 .slider{
 display:flex;
-overflow-x:auto;
-scroll-snap-type:x mandatory;
-scroll-behavior:smooth;
-}
-
-.slider::-webkit-scrollbar{
-display:none;
+transition:transform .45s cubic-bezier(.22,.9,.34,1);
+will-change:transform;
 }
 
 .slide{
 min-width:100%;
-scroll-snap-align:center;
+aspect-ratio:1/1;
+overflow:hidden;
 }
 
-/* ⭐ 强制1:1裁切 */
 .slide img{
 width:100%;
-aspect-ratio:1/1;
+height:100%;
 object-fit:cover;
-display:block;
+pointer-events:none;
+user-select:none;
 }
 
-/* 信息 */
+/* 小圆点 */
+
+.dots{
+position:absolute;
+bottom:12px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:6px;
+}
+
+.dot{
+width:6px;
+height:6px;
+background:#ffffff90;
+border-radius:20px;
+transition:.3s;
+}
+
+.dot.active{
+width:20px;
+background:#fff;
+}
+
+/* 信息区 */
+
 .info{
-padding:20px;
+padding:22px 18px 110px;
 }
 
 .title{
 font-size:26px;
-font-weight:800;
-}
-
-.price{
-margin-top:10px;
-}
-
-.now{
-font-size:28px;
 font-weight:900;
-color:#e60023;
 }
 
-.old{
+.price-now{
+font-size:30px;
+font-weight:900;
+color:#ff0036;
+}
+
+.price-old{
 text-decoration:line-through;
 color:#999;
-margin-left:8px;
+margin-left:10px;
 }
 
-.star{
-color:#ffaa00;
-margin-top:6px;
-}
-
-.timer{
-margin-top:10px;
-background:#000;
-color:#fff;
-display:inline-block;
-padding:6px 12px;
-border-radius:10px;
-font-size:14px;
-}
-
-/* 按钮 */
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:12px;
-margin-top:20px;
+margin-top:18px;
 }
 
 .btn{
 border:none;
-padding:16px;
-border-radius:16px;
-background:#f2f4f7;
-font-weight:600;
+padding:15px;
+border-radius:14px;
+background:#f2f3f5;
+font-weight:700;
 transition:.25s;
 }
 
 .btn.active{
-background:#000;
+background:#111;
 color:#fff;
-transform:scale(1.05);
+transform:scale(1.06);
 }
 
-.btn:active{
-transform:scale(.95);
-}
+/* 底部 */
 
-/* ⭐ 固定底部 */
 .bottom{
 position:fixed;
 bottom:0;
@@ -165,7 +160,7 @@ display:flex;
 gap:10px;
 padding:12px;
 background:#fff;
-box-shadow:0 -8px 30px rgba(0,0,0,.2);
+box-shadow:0 -15px 40px rgba(0,0,0,.18);
 }
 
 .cart{
@@ -183,14 +178,8 @@ padding:16px;
 border-radius:14px;
 background:#000;
 color:#fff;
-font-size:17px;
-font-weight:800;
-}
-
-@media(max-width:768px){
-.app{
-border-radius:0;
-}
+font-size:18px;
+font-weight:900;
 }
 
 </style>
@@ -201,12 +190,13 @@ border-radius:0;
 <div class="app">
 
 <div class="nav">
-🔥 核弹英雄商城
+🔥 英雄商城
 </div>
 
-<div class="content">
+<!-- 顶级拖动轮播 -->
 
-<!-- 轮播 -->
+<div class="slider-wrap">
+
 <div class="slider" id="slider">
 
 <div class="slide"><img src="fwxu.jpg"></div>
@@ -220,19 +210,17 @@ border-radius:0;
 
 </div>
 
+<div class="dots" id="dots"></div>
+
+</div>
+
 <div class="info">
 
 <div class="title">请选择你的英雄</div>
 
-<div class="price">
-<span class="now">¥69</span>
-<span class="old">¥199</span>
-</div>
-
-<div class="star">⭐⭐⭐⭐⭐ (2.6万评价)</div>
-
-<div class="timer" id="timer">
-限时秒杀 05:00
+<div>
+<span class="price-now">¥69</span>
+<span class="price-old">¥199</span>
 </div>
 
 <div class="grid">
@@ -249,9 +237,7 @@ border-radius:0;
 </div>
 </div>
 </div>
-</div>
 
-<!-- 底部 -->
 <div class="bottom">
 <button class="cart">加入购物车</button>
 <button class="buy">立即购买</button>
@@ -260,74 +246,103 @@ border-radius:0;
 <script>
 
 const slider=document.getElementById('slider');
+const dots=document.getElementById('dots');
+const total=slider.children.length;
 
-/* ⭐⭐⭐ 10秒自动轮播 ⭐⭐⭐ */
+let index=0;
+let startX=0;
+let currentX=0;
+let isDragging=false;
 
-let autoPlay;
+/* 小圆点 */
 
-function startAutoPlay(){
+for(let i=0;i<total;i++){
+const d=document.createElement('div');
+d.className='dot'+(i==0?' active':'');
+dots.appendChild(d);
+}
 
-autoPlay=setTimeout(()=>{
+function updateDots(){
+document.querySelectorAll('.dot')
+.forEach(d=>d.classList.remove('active'));
+dots.children[index].classList.add('active');
+}
 
-const width=slider.clientWidth;
+/* 拖动 */
 
-slider.scrollBy({
-left:width,
-behavior:'smooth'
+slider.addEventListener('touchstart',e=>{
+isDragging=true;
+startX=e.touches[0].clientX;
 });
 
-if(slider.scrollLeft + width >= slider.scrollWidth){
-slider.scrollTo({left:0});
-}
+slider.addEventListener('touchmove',e=>{
+if(!isDragging)return;
 
-startAutoPlay();
+currentX=e.touches[0].clientX-startX;
 
-},10000); // ⭐ 已改10秒
-}
-
-startAutoPlay();
-
-/* 手动滑动后重新计时 */
-
-slider.addEventListener('touchstart',()=>{
-clearTimeout(autoPlay);
+slider.style.transition='none';
+slider.style.transform=
+`translateX(${ -index*slider.clientWidth + currentX }px)`;
 });
 
 slider.addEventListener('touchend',()=>{
-startAutoPlay();
+
+isDragging=false;
+
+if(Math.abs(currentX)>80){
+
+if(currentX<0 && index<total-1) index++;
+if(currentX>0 && index>0) index--;
+
+}
+
+slider.style.transition='.45s cubic-bezier(.22,.9,.34,1)';
+slider.style.transform=
+`translateX(${-index*slider.clientWidth}px)`;
+
+updateDots();
+
+currentX=0;
+
+resetAuto();
+
 });
 
-/* 倒计时 */
-
-let t=300;
-
-setInterval(()=>{
-
-t--;
-
-let m=Math.floor(t/60);
-let s=t%60;
-
-timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
-
-},1000);
-
-/* 切换 */
+/* 按钮跳转 */
 
 function go(i,btn){
 
-const width=slider.clientWidth;
+index=i;
 
-slider.scrollTo({
-left:width*i,
-behavior:'smooth'
-});
+slider.style.transform=
+`translateX(${-index*slider.clientWidth}px)`;
 
 document.querySelectorAll('.btn')
 .forEach(b=>b.classList.remove('active'));
 
 btn.classList.add('active');
 
+updateDots();
+resetAuto();
+}
+
+/* ⭐10秒自动轮播 */
+
+let auto=setInterval(next,10000);
+
+function next(){
+
+index = (index+1)%total;
+
+slider.style.transform=
+`translateX(${-index*slider.clientWidth}px)`;
+
+updateDots();
+}
+
+function resetAuto(){
+clearInterval(auto);
+auto=setInterval(next,10000);
 }
 
 /* 预加载 */
