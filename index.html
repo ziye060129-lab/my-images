@@ -28,7 +28,7 @@ background:#111;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 }
 
-/* ===== APP容器 ===== */
+/* APP容器 */
 
 .app{
 max-width:520px;
@@ -39,7 +39,7 @@ border-radius:30px;
 overflow:hidden;
 }
 
-/* ===== 顶部导航 ===== */
+/* 顶部导航 */
 
 .nav{
 position:sticky;
@@ -51,7 +51,7 @@ text-align:center;
 font-weight:700;
 }
 
-/* ===== 自动轮播 ===== */
+/* 自动轮播 */
 
 .slider{
 display:flex;
@@ -71,9 +71,10 @@ scroll-snap-align:center;
 
 .slide img{
 width:100%;
+display:block;
 }
 
-/* ===== 信息 ===== */
+/* 信息 */
 
 .info{
 padding:20px;
@@ -107,7 +108,7 @@ color:#ffaa00;
 margin-top:6px;
 }
 
-/* ===== 倒计时 ===== */
+/* 倒计时 */
 
 .timer{
 margin-top:10px;
@@ -119,7 +120,7 @@ border-radius:10px;
 font-size:14px;
 }
 
-/* ===== Hero按钮 ===== */
+/* Hero按钮 */
 
 .grid{
 display:grid;
@@ -147,7 +148,7 @@ transform:scale(1.05);
 transform:scale(.95);
 }
 
-/* ===== 底部 ===== */
+/* 底部 */
 
 .bottom{
 position:fixed;
@@ -180,14 +181,12 @@ font-size:17px;
 font-weight:800;
 }
 
-/* ===== 手机 ===== */
+/* 手机 */
 
 @media(max-width:768px){
-
 .app{
 border-radius:0;
 }
-
 }
 
 </style>
@@ -201,11 +200,10 @@ border-radius:0;
 🔥 核弹英雄商城
 </div>
 
-<!-- ⭐ 自动轮播 -->
+<!-- 自动轮播 -->
 
 <div class="slider" id="slider">
 
-<div class="slide"><img src="haibaozjh.png"></div>
 <div class="slide"><img src="fwxu.jpg"></div>
 <div class="slide"><img src="yingfenshen.png"></div>
 <div class="slide"><img src="22.jpg"></div>
@@ -234,15 +232,14 @@ border-radius:0;
 
 <div class="grid">
 
-<button class="btn active" onclick="go(0,this)">头条詹金华</button>
-<button class="btn" onclick="go(1,this)">肺雾肾虚男</button>
-<button class="btn" onclick="go(2,this)">神秘影分身</button>
-<button class="btn" onclick="go(3,this)">暴力肌肉男</button>
-<button class="btn" onclick="go(4,this)">朵拉暴露狂</button>
-<button class="btn" onclick="go(5,this)">猥琐张金红</button>
-<button class="btn" onclick="go(6,this)">幽默傻笑男</button>
-<button class="btn" onclick="go(7,this)">煞笔三剑客</button>
-<button class="btn" onclick="go(8,this)">超级扫军爷</button>
+<button class="btn active" onclick="go(0,this)">肺雾肾虚男</button>
+<button class="btn" onclick="go(1,this)">神秘影分身</button>
+<button class="btn" onclick="go(2,this)">暴力肌肉男</button>
+<button class="btn" onclick="go(3,this)">朵拉暴露狂</button>
+<button class="btn" onclick="go(4,this)">猥琐张金红</button>
+<button class="btn" onclick="go(5,this)">幽默傻笑男</button>
+<button class="btn" onclick="go(6,this)">煞笔三剑客</button>
+<button class="btn" onclick="go(7,this)">超级扫军爷</button>
 
 </div>
 </div>
@@ -255,22 +252,27 @@ border-radius:0;
 
 <script>
 
-/* ⭐ 自动轮播 */
+const slider=document.getElementById('slider');
+
+/* 自动轮播（修复错位版） */
 
 setInterval(()=>{
+
+const width=slider.clientWidth;
+
 slider.scrollBy({
-left:window.innerWidth,
+left:width,
 behavior:'smooth'
 });
 
-if(slider.scrollLeft + window.innerWidth >= slider.scrollWidth){
+if(slider.scrollLeft + width >= slider.scrollWidth){
 slider.scrollTo({left:0});
 }
 
 },3000);
 
 
-/* ⭐ 秒杀倒计时 */
+/* 秒杀倒计时 */
 
 let t=300;
 
@@ -286,12 +288,14 @@ timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
 },1000);
 
 
-/* ⭐ 切换英雄 */
+/* 切换英雄 */
 
 function go(i,btn){
 
+const width=slider.clientWidth;
+
 slider.scrollTo({
-left:window.innerWidth*i,
+left:width*i,
 behavior:'smooth'
 });
 
@@ -303,10 +307,10 @@ btn.classList.add('active');
 }
 
 
-/* ⭐ 预加载 */
+/* 预加载 */
 
 [
-'haibaozjh.png','fwxu.jpg','yingfenshen.png',
+'fwxu.jpg','yingfenshen.png',
 '22.jpg','duola.png','zjh.png',
 'shaxiaozjh.png','sanjianke.png','11.jpg'
 ].forEach(src=>{
