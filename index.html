@@ -28,8 +28,6 @@ background:#111;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 }
 
-/* APP容器 */
-
 .app{
 max-width:520px;
 margin:auto;
@@ -38,8 +36,6 @@ min-height:100vh;
 border-radius:30px;
 overflow:hidden;
 }
-
-/* 顶部导航 */
 
 .nav{
 position:sticky;
@@ -50,8 +46,6 @@ padding:14px;
 text-align:center;
 font-weight:700;
 }
-
-/* 自动轮播 */
 
 .slider{
 display:flex;
@@ -73,8 +67,6 @@ scroll-snap-align:center;
 width:100%;
 display:block;
 }
-
-/* 信息 */
 
 .info{
 padding:20px;
@@ -101,14 +93,10 @@ color:#999;
 margin-left:8px;
 }
 
-/* ⭐评分 */
-
 .star{
 color:#ffaa00;
 margin-top:6px;
 }
-
-/* 倒计时 */
 
 .timer{
 margin-top:10px;
@@ -119,8 +107,6 @@ padding:6px 12px;
 border-radius:10px;
 font-size:14px;
 }
-
-/* Hero按钮 */
 
 .grid{
 display:grid;
@@ -147,8 +133,6 @@ transform:scale(1.05);
 .btn:active{
 transform:scale(.95);
 }
-
-/* 底部 */
 
 .bottom{
 position:fixed;
@@ -181,8 +165,6 @@ font-size:17px;
 font-weight:800;
 }
 
-/* 手机 */
-
 @media(max-width:768px){
 .app{
 border-radius:0;
@@ -199,8 +181,6 @@ border-radius:0;
 <div class="nav">
 🔥 核弹英雄商城
 </div>
-
-<!-- 自动轮播 -->
 
 <div class="slider" id="slider">
 
@@ -254,9 +234,14 @@ border-radius:0;
 
 const slider=document.getElementById('slider');
 
-/* 自动轮播（修复错位版） */
 
-setInterval(()=>{
+/* ⭐⭐⭐ 超稳定5秒自动轮播 ⭐⭐⭐ */
+
+let autoPlay;
+
+function startAutoPlay(){
+
+autoPlay=setTimeout(()=>{
 
 const width=slider.clientWidth;
 
@@ -269,7 +254,24 @@ if(slider.scrollLeft + width >= slider.scrollWidth){
 slider.scrollTo({left:0});
 }
 
-},3000);
+startAutoPlay(); // 递归
+
+},5000); // ← 已改为5秒
+
+}
+
+startAutoPlay();
+
+
+/* 用户滑动后重新计时 */
+
+slider.addEventListener('touchstart',()=>{
+clearTimeout(autoPlay);
+});
+
+slider.addEventListener('touchend',()=>{
+startAutoPlay();
+});
 
 
 /* 秒杀倒计时 */
@@ -288,7 +290,7 @@ timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
 },1000);
 
 
-/* 切换英雄 */
+/* 点击按钮切换 */
 
 function go(i,btn){
 
@@ -307,7 +309,7 @@ btn.classList.add('active');
 }
 
 
-/* 预加载 */
+/* 预加载图片 */
 
 [
 'fwxu.jpg','yingfenshen.png',
