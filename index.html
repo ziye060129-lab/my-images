@@ -28,8 +28,6 @@ background:#111;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 }
 
-/* ===== APP容器 ===== */
-
 .app{
 max-width:520px;
 margin:auto;
@@ -39,20 +37,15 @@ border-radius:30px;
 overflow:hidden;
 }
 
-/* ===== 顶部 ===== */
-
 .nav{
 position:sticky;
 top:0;
-z-index:10;
 backdrop-filter:blur(20px);
 background:rgba(255,255,255,.7);
 padding:14px;
 text-align:center;
 font-weight:700;
 }
-
-/* ===== ⭐ 核心：1:1 裁剪轮播 ===== */
 
 .slider{
 display:flex;
@@ -67,21 +60,13 @@ display:none;
 
 .slide{
 min-width:100%;
-aspect-ratio:1 / 1;      /* ⭐ 强制 1:1 */
-background:#f2f2f2;
-overflow:hidden;
 scroll-snap-align:center;
 }
 
 .slide img{
 width:100%;
-height:100%;
-object-fit:cover;        /* ⭐ 真正裁剪 */
-object-position:center;
 display:block;
 }
-
-/* ===== 信息区 ===== */
 
 .info{
 padding:20px;
@@ -123,8 +108,6 @@ border-radius:10px;
 font-size:14px;
 }
 
-/* ===== 按钮 ===== */
-
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -150,8 +133,6 @@ transform:scale(1.05);
 .btn:active{
 transform:scale(.95);
 }
-
-/* ===== 底部 ===== */
 
 .bottom{
 position:fixed;
@@ -184,10 +165,10 @@ font-size:17px;
 font-weight:800;
 }
 
-/* ===== 手机 ===== */
-
 @media(max-width:768px){
-.app{ border-radius:0; }
+.app{
+border-radius:0;
+}
 }
 
 </style>
@@ -200,8 +181,6 @@ font-weight:800;
 <div class="nav">
 🔥 核弹英雄商城
 </div>
-
-<!-- ⭐ 默认第一张：肺雾肾虚男（已裁成 1:1） -->
 
 <div class="slider" id="slider">
 
@@ -227,9 +206,12 @@ font-weight:800;
 
 <div class="star">⭐⭐⭐⭐⭐ (2.6万评价)</div>
 
-<div class="timer" id="timer">限时秒杀 05:00</div>
+<div class="timer" id="timer">
+限时秒杀 05:00
+</div>
 
 <div class="grid">
+
 <button class="btn active" onclick="go(0,this)">肺雾肾虚男</button>
 <button class="btn" onclick="go(1,this)">神秘影分身</button>
 <button class="btn" onclick="go(2,this)">暴力肌肉男</button>
@@ -238,8 +220,8 @@ font-weight:800;
 <button class="btn" onclick="go(5,this)">幽默傻笑男</button>
 <button class="btn" onclick="go(6,this)">煞笔三剑客</button>
 <button class="btn" onclick="go(7,this)">超级扫军爷</button>
-</div>
 
+</div>
 </div>
 </div>
 
@@ -250,48 +232,84 @@ font-weight:800;
 
 <script>
 
-/* ⭐ 自动轮播：5 秒 */
+const slider=document.getElementById('slider');
 
-setInterval(()=>{
+/* ⭐⭐⭐ 超稳定10秒自动轮播 ⭐⭐⭐ */
+
+let autoPlay;
+
+function startAutoPlay(){
+
+autoPlay=setTimeout(()=>{
+
+const width=slider.clientWidth;
+
 slider.scrollBy({
-left:window.innerWidth,
+left:width,
 behavior:'smooth'
 });
 
-if(slider.scrollLeft + window.innerWidth >= slider.scrollWidth){
+if(slider.scrollLeft + width >= slider.scrollWidth){
 slider.scrollTo({left:0});
 }
 
-},5000);
+startAutoPlay();
 
-/* 倒计时 */
+},10000); // ⭐⭐⭐ 已改为10秒 ⭐⭐⭐
 
-let t=300;
-setInterval(()=>{
-t--;
-let m=Math.floor(t/60);
-let s=t%60;
-timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
-},1000);
-
-/* 切换 */
-
-function go(i,btn){
-slider.scrollTo({
-left:window.innerWidth*i,
-behavior:'smooth'
-});
-document.querySelectorAll('.btn')
-.forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
 }
 
-/* ⭐ 预加载 */
+startAutoPlay();
+
+/* 用户滑动后重新计时 */
+
+slider.addEventListener('touchstart',()=>{
+clearTimeout(autoPlay);
+});
+
+slider.addEventListener('touchend',()=>{
+startAutoPlay();
+});
+
+/* 秒杀倒计时 */
+
+let t=300;
+
+setInterval(()=>{
+
+t--;
+
+let m=Math.floor(t/60);
+let s=t%60;
+
+timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
+
+},1000);
+
+/* 点击按钮切换 */
+
+function go(i,btn){
+
+const width=slider.clientWidth;
+
+slider.scrollTo({
+left:width*i,
+behavior:'smooth'
+});
+
+document.querySelectorAll('.btn')
+.forEach(b=>b.classList.remove('active'));
+
+btn.classList.add('active');
+
+}
+
+/* 预加载图片 */
 
 [
-'fwxu.jpg','yingfenshen.png','22.jpg',
-'duola.png','zjh.png','shaxiaozjh.png',
-'sanjianke.png','11.jpg'
+'fwxu.jpg','yingfenshen.png',
+'22.jpg','duola.png','zjh.png',
+'shaxiaozjh.png','sanjianke.png','11.jpg'
 ].forEach(src=>{
 new Image().src=src;
 });
