@@ -28,6 +28,8 @@ background:#111;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 }
 
+/* APP容器 */
+
 .app{
 max-width:520px;
 margin:auto;
@@ -36,6 +38,8 @@ min-height:100vh;
 border-radius:30px;
 overflow:hidden;
 }
+
+/* 顶部 */
 
 .nav{
 position:sticky;
@@ -46,6 +50,8 @@ padding:14px;
 text-align:center;
 font-weight:700;
 }
+
+/* ⭐⭐⭐ 核心修复区域 */
 
 .slider{
 display:flex;
@@ -60,13 +66,19 @@ display:none;
 
 .slide{
 min-width:100%;
-scroll-snap-align:center;
+aspect-ratio:1/1;   /* ⭐ 强制统一比例 */
+overflow:hidden;
+background:#f3f3f3;
 }
 
 .slide img{
 width:100%;
+height:100%;
+object-fit:cover;   /* ⭐ 自动填满 */
 display:block;
 }
+
+/* 信息 */
 
 .info{
 padding:20px;
@@ -108,6 +120,8 @@ border-radius:10px;
 font-size:14px;
 }
 
+/* 按钮 */
+
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
@@ -133,6 +147,8 @@ transform:scale(1.05);
 .btn:active{
 transform:scale(.95);
 }
+
+/* 底部 */
 
 .bottom{
 position:fixed;
@@ -165,10 +181,14 @@ font-size:17px;
 font-weight:800;
 }
 
+/* 手机 */
+
 @media(max-width:768px){
+
 .app{
 border-radius:0;
 }
+
 }
 
 </style>
@@ -181,6 +201,8 @@ border-radius:0;
 <div class="nav">
 🔥 核弹英雄商城
 </div>
+
+<!-- ⭐ 默认第一张 = 肺雾肾虚男 -->
 
 <div class="slider" id="slider">
 
@@ -232,49 +254,22 @@ border-radius:0;
 
 <script>
 
-const slider=document.getElementById('slider');
+/* ⭐ 自动轮播 5秒 */
 
-
-/* ⭐⭐⭐ 超稳定5秒自动轮播 ⭐⭐⭐ */
-
-let autoPlay;
-
-function startAutoPlay(){
-
-autoPlay=setTimeout(()=>{
-
-const width=slider.clientWidth;
-
+setInterval(()=>{
 slider.scrollBy({
-left:width,
+left:window.innerWidth,
 behavior:'smooth'
 });
 
-if(slider.scrollLeft + width >= slider.scrollWidth){
+if(slider.scrollLeft + window.innerWidth >= slider.scrollWidth){
 slider.scrollTo({left:0});
 }
 
-startAutoPlay(); // 递归
-
-},5000); // ← 已改为5秒
-
-}
-
-startAutoPlay();
+},5000);
 
 
-/* 用户滑动后重新计时 */
-
-slider.addEventListener('touchstart',()=>{
-clearTimeout(autoPlay);
-});
-
-slider.addEventListener('touchend',()=>{
-startAutoPlay();
-});
-
-
-/* 秒杀倒计时 */
+/* 秒杀 */
 
 let t=300;
 
@@ -290,14 +285,12 @@ timer.innerHTML=`限时秒杀 ${m}:${s<10?'0'+s:s}`;
 },1000);
 
 
-/* 点击按钮切换 */
+/* 切换 */
 
 function go(i,btn){
 
-const width=slider.clientWidth;
-
 slider.scrollTo({
-left:width*i,
+left:window.innerWidth*i,
 behavior:'smooth'
 });
 
@@ -309,7 +302,7 @@ btn.classList.add('active');
 }
 
 
-/* 预加载图片 */
+/* ⭐ 预加载 */
 
 [
 'fwxu.jpg','yingfenshen.png',
